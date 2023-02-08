@@ -106,6 +106,11 @@ class Connection(object):
             time.time() - self._last_use_time > self.max_idle_time
         ):
             await self.reconnect()
+        else:
+            try:
+                await self._conn.ping(False)
+            except:
+                await self.reconnect()
         self._last_use_time = time.time()
 
     async def _cursor(self) -> aiomysql.Cursor:
